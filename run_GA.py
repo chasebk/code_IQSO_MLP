@@ -1,4 +1,4 @@
-from models.multiple_solution.evolutionary_based.GA import BaseGA
+from models.evolution.GA import BaseGA
 from utils.FunctionUtil import *
 
 ## Setting parameters

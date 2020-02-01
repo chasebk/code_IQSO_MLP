@@ -1,13 +1,5 @@
-import numpy as np
 import pickle as pkl
-from models.multiple_solution.swarm_based.WOA import BaoWOA
-from models.multiple_solution.swarm_based.PSO import BasePSO
-from models.multiple_solution.swarm_based.BFO import ABFOLS
-from models.multiple_solution.swarm_based.ABC import BaseABC
-from models.multiple_solution.evolutionary_based.CRO import BaseCRO
-from models.multiple_solution.evolutionary_based.GA import BaseGA
-from models.multiple_solution.human_based.QSO import BaseQSO, LevyOppQSO
-from models.multiple_solution.physics_based.TWO import BaseTWO
+from models.evolution.GA import BaseGA
 from utils.FunctionUtil import *
 """
 GA
