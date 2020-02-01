@@ -98,13 +98,13 @@ class BaseBFO(RootAlgo):
             for k in range(0, self.repro_steps):
                 current_best, cells = self._chemotaxis__(l, k, cells)
                 if (best is None) or current_best[self.ID_COST] < best[self.ID_COST]:
-                    best = current_best
+                    best = deepcopy(current_best)
                 cells = sorted(cells, key=lambda cell: cell[self.ID_SUM_NUTRIENTS])
                 cells = deepcopy(cells[0:half_pop_size]) + deepcopy(cells[0:half_pop_size])
             for idc in range(self.pop_size):
                 if np.random.uniform() < self.p_eliminate:
                     cells[idc] = self._create_solution__(minmax=0)
-        return best[self.ID_VECTOR], self.loss_train
+        return best[self.ID_VECTOR], self.loss_train, best[self.ID_FITNESS]
 
 
 
@@ -142,12 +142,12 @@ class ABFOLS(RootAlgo):
         return [vector, fitness, nutrient, p_best]
 
     def _tumble_cell__(self, cell=None, step_size=None):
-        delta_i = (self.global_best[self.ID_VECTOR] - cell[self.ID_VECTOR]) + (cell[self.ID_PERSONAL_BEST] - cell[self.ID_VECTOR])
+        delta_i = (self.g_best[self.ID_VECTOR] - cell[self.ID_VECTOR]) + (cell[self.ID_PERSONAL_BEST] - cell[self.ID_VECTOR])
         if np.all(delta_i == 0):
             delta_i = np.random.uniform(self.domain_range[0], self.domain_range[1], self.problem_size)
         unit_vector = delta_i / np.sqrt(np.dot(delta_i, delta_i.T))
 
-        #unit_vector = np.random.uniform() * 1.2 * (self.global_best[self.ID_VECTOR] - cell[self.ID_VECTOR]) + np.random.uniform() *1.2* (cell[self.ID_PERSONAL_BEST] - cell[self.ID_VECTOR])
+        #unit_vector = np.random.uniform() * 1.2 * (self.g_best[self.ID_VECTOR] - cell[self.ID_VECTOR]) + np.random.uniform() *1.2* (cell[self.ID_PERSONAL_BEST] - cell[self.ID_VECTOR])
         vec = cell[self.ID_VECTOR] + step_size * unit_vector
         fit = self._fitness_model__(vec, self.ID_MAX_PROBLEM)
         if fit> cell[self.ID_FITNESS]:
@@ -161,7 +161,7 @@ class ABFOLS(RootAlgo):
         cell[self.ID_FITNESS] = fit
 
         # Update global best
-        self.global_best = deepcopy(cell) if self.global_best[self.ID_FITNESS] < cell[self.ID_FITNESS] else self.global_best
+        self.g_best = deepcopy(cell) if self.g_best[self.ID_FITNESS] < cell[self.ID_FITNESS] else self.g_best
         return cell
 
 
@@ -173,7 +173,7 @@ class ABFOLS(RootAlgo):
 
     def _train__(self):
         cells = [self._create_solution__(minmax=0) for _ in range(0, self.pop_size)]
-        self.global_best = self._get_global_best__(cells, self.ID_FITNESS, self.ID_MAX_PROBLEM)
+        self.g_best = self._get_g_best__(cells, self.ID_FITNESS, self.ID_MAX_PROBLEM)
 
         for loop in range(self.epoch):
             i = 0
@@ -208,11 +208,11 @@ class ABFOLS(RootAlgo):
 
                 if cells[i][self.ID_NUTRIENT] < self.NUMBER_CONTROL_RATE and np.random.uniform() < self.p_eliminate:
                     temp = self._create_solution__(minmax=0)
-                    self.global_best = deepcopy(temp) if temp[self.ID_FITNESS] > self.global_best[self.ID_FITNESS] else self.global_best
+                    self.g_best = deepcopy(temp) if temp[self.ID_FITNESS] > self.g_best[self.ID_FITNESS] else self.g_best
                     cells[i] = temp
                 i += 1
-            self.loss_train.append([1.0 / self.global_best[self.ID_FITNESS], 1.0 / self.global_best[self.ID_FITNESS]])
+            self.loss_train.append([1.0 / self.g_best[self.ID_FITNESS], 1.0 / self.g_best[self.ID_FITNESS]])
             if self.print_train:
-                print("Epoch = {}, Pop_size = {}, >> Best fitness = {}".format(loop + 1, len(cells), 1.0 / self.global_best[self.ID_FITNESS]))
+                print("Epoch = {}, Pop_size = {}, >> Best fitness = {}".format(loop + 1, len(cells), 1.0 / self.g_best[self.ID_FITNESS]))
 
-        return self.global_best[self.ID_VECTOR], self.loss_train, self.global_best[self.ID_FITNESS]
+        return self.g_best[self.ID_VECTOR], self.loss_train, self.g_best[self.ID_FITNESS]

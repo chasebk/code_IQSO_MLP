@@ -1,42 +1,36 @@
-import numpy as np
+
+from numpy.random import randint, uniform, choice
 from copy import deepcopy
 from models.root_algo import RootAlgo
 
 class BaseDE(RootAlgo):
-    ID_SOl = 0
-    ID_FIT = 1
+
     def __init__(self, root_algo_paras=None, de_paras = None):
         RootAlgo.__init__(self, root_algo_paras)
-        self.epoch =  de_paras["epoch"]
+        self.epoch = de_paras["epoch"]
         self.pop_size = de_paras["pop_size"]
         self.weighting_factor = de_paras["Wf"]
         self.crossover_rate = de_paras["Cr"]
 
     def _mutation__(self, p0, p1, p2, p3):
         # Choose a cut point which differs 0 and chromosome-1 (first and last element)
-        cut_point = np.random.randint(1, self.problem_size - 1)
-        sample = []
-        for i in range(self.problem_size):
-            if i == cut_point or np.random.uniform() < self.crossover_rate  :
-                v = p1[i] + self.weighting_factor * ( p2[i] - p3[i])
-                v = self.domain_range[0] if v < self.domain_range[0] else v
-                v = self.domain_range[1] if v > self.domain_range[1] else v
-                sample.append(v)
-            else :
-                sample.append(p0[i])
-        return sample
+        cut_point = randint(1, self.problem_size - 1)
+        sample = deepcopy(p0)
+        for k in range(self.problem_size):
+            if k == cut_point or uniform() < self.crossover_rate:
+                sample[k] = p1[k] + self.weighting_factor * ( p2[k] - p3[k])
+        return self._faster_amend_solution__(sample)
 
     def _create_children__(self, pop):
-        new_children = []
-        for i in range(self.pop_size):
-            temp = np.random.choice(range(0, self.pop_size), 3, replace=False)
-            while i in temp:
-                temp = np.random.choice(range(0, self.pop_size), 3, replace=False)
+        pop_child = deepcopy(pop)
+        for k in range(0, self.pop_size):
+            # Choose 3 random element and different to i
+            temp = choice(list(set(range(0, self.pop_size)) - {k}), 3, replace=False)
             #create new child and append in children array
-            child = self._mutation__(pop[i][self.ID_SOl], pop[temp[0]][self.ID_SOl], pop[temp[1]][self.ID_SOl], pop[temp[2]][self.ID_SOl])
+            child = self._mutation__(pop[k][self.ID_POS], pop[temp[0]][self.ID_POS], pop[temp[1]][self.ID_POS], pop[temp[2]][self.ID_POS])
             fit = self._fitness_model__(child)
-            new_children.append([child, fit])
-        return new_children
+            pop_child[k] = [child, fit]
+        return pop_child
 
     ### Survivor Selection
     def _greedy_selection__(self, pop_old=None, pop_new=None):
@@ -46,24 +40,19 @@ class BaseDE(RootAlgo):
 
     def _train__(self):
         pop = [self._create_solution__() for _ in range(self.pop_size)]
-        gbest = self._get_global_best__(pop=pop, id_fitness=self.ID_FIT, id_best=self.ID_MIN_PROBLEM)
+        g_best = self._get_global_best__(pop=pop, id_fitness=self.ID_FIT, id_best=self.ID_MIN_PROBLEM)
 
         for i in range(self.epoch):
             # create children
-            children = self._create_children__(pop)
+            pop_child = self._create_children__(pop)
             # create new pop by comparing fitness of corresponding each member in pop and children
-            pop = self._greedy_selection__(pop, children)
+            pop = self._greedy_selection__(pop, pop_child)
 
-            current_best = self._get_global_best__(pop=pop, id_fitness=self.ID_FIT, id_best=self.ID_MIN_PROBLEM)
-            if current_best[self.ID_FIT]< gbest[self.ID_FIT]:
-                gbest = deepcopy(current_best)
-            self.loss_train.append(gbest[self.ID_FIT])
+            # update global best solution
+            g_best = self._update_global_best__(pop, self.ID_MIN_PROBLEM, g_best)
+            self.loss_train.append(g_best[self.ID_FIT])
             if self.print_train:
-                print("Epoch : {}, [MSE, MAE]: {}".format(i + 1, gbest[self.ID_FIT]))
+                print("Epoch : {}, Best fitness: {}".format(i + 1, g_best[self.ID_FIT]))
 
-        return gbest[self.ID_SOl], self.loss_train
-
-
-
-
+        return g_best[self.ID_POS], self.loss_train, g_best[self.ID_FIT]
 

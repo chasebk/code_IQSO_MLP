@@ -6,6 +6,9 @@ class RootAlgo(object):
     ID_MIN_PROBLEM = 0
     ID_MAX_PROBLEM = -1
 
+    ID_POS = 0
+    ID_FIT = 1
+
     def __init__(self, root_algo_paras = None):
         self.problem_size = root_algo_paras["problem_size"]
         self.domain_range = root_algo_paras["domain_range"]
@@ -26,30 +29,40 @@ class RootAlgo(object):
     def _fitness_encoded__(self, encoded=None, id_pos=None, minmax=0):
         return self._fitness_model__(solution=encoded[id_pos], minmax=minmax)
 
-    def _get_global_best__(self, pop=None, id_fitness=None, id_best=None):
-        sorted_pop = sorted(pop, key=lambda temp: temp[id_fitness])
-        return deepcopy(sorted_pop[id_best])
 
     def _amend_solution__(self, solution=None):
-        for i in range(self.problem_size):
-            if solution[i] < self.domain_range[0]:
-                solution[i] = self.domain_range[0]
-            if solution[i] > self.domain_range[1]:
-                solution[i] = self.domain_range[1]
+        return np.maximum(self.domain_range[0], np.minimum(self.domain_range[1], solution))
 
-    def _amend_solution_and_return__(self, solution=None):
-        temp = deepcopy(solution)
+    def _faster_amend_solution__(self, solution=None):
+        return np.clip(solution, self.domain_range[0], self.domain_range[1])
+
+    def _random_amend_solution__(self, solution=None):
         for i in range(self.problem_size):
-            if solution[i] < self.domain_range[0]:
-                solution[i] = self.domain_range[0]
-            if solution[i] > self.domain_range[1]:
-                solution[i] = self.domain_range[1]
-        return temp
+            if solution[i] < self.domain_range[0] or solution[i] > self.domain_range[1]:
+                solution[i] = np.random.uniform(self.domain_range[0], self.domain_range[1])
+        return solution
+
 
     def _create_opposition_solution__(self, solution=None, g_best=None):
         temp = [self.domain_range[0] + self.domain_range[1] - g_best[i] + np.random.random() * (g_best[i] - solution[i])
                       for i in range(self.problem_size)]
         return np.array(temp)
+
+
+    def _get_global_best__(self, pop=None, id_fitness=None, id_best=None):
+        sorted_pop = sorted(pop, key=lambda temp: temp[id_fitness])
+        return deepcopy(sorted_pop[id_best])
+
+    def _update_global_best__(self, pop=None, id_best=None, g_best=None):
+        sorted_pop = sorted(pop, key=lambda temp: temp[self.ID_FIT])
+        current_best = sorted_pop[id_best]
+        return deepcopy(current_best) if current_best[self.ID_FIT] < g_best[self.ID_FIT] else deepcopy(g_best)
+
+    def _sort_pop_and_update_global_best__(self, pop=None, id_best=None, g_best=None):
+        sorted_pop = sorted(pop, key=lambda temp: temp[self.ID_FIT])
+        current_best = sorted_pop[id_best]
+        g_best = deepcopy(current_best) if current_best[self.ID_FIT] < g_best[self.ID_FIT] else deepcopy(g_best)
+        return g_best, sorted_pop
 
 
     def _train__(self):

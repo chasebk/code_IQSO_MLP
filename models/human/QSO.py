@@ -2,7 +2,6 @@ import numpy as np
 from math import gamma
 from models.root_algo import RootAlgo
 
-
 class BaseQSO(RootAlgo):
     ID_POS = 0
     ID_FIT = 1

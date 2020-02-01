@@ -32,12 +32,8 @@ class BasePSO(RootAlgo):
         return [x, x_past_best, v, x_fitness, x_past_fitness]
 
     def _train__(self):
-        """
-        - Khoi tao quan the (tinh ca global best)
-        - Di chuyen va update vi tri, update gbest
-        """
         pop = [self._create_solution__(minmax=0) for _ in range(self.pop_size)]
-        gbest = self._get_global_best__(pop=pop, id_fitness=self.ID_CURRENT_FITNESS, id_best=self.ID_MIN_PROBLEM)
+        g_best = self._get_global_best__(pop=pop, id_fitness=self.ID_CURRENT_FITNESS, id_best=self.ID_MIN_PROBLEM)
 
         for i in range(self.epoch):
             # Update weight after each move count  (weight down)
@@ -45,17 +41,15 @@ class BasePSO(RootAlgo):
             for j in range(self.pop_size):
                 r1 = np.random.random_sample()
                 r2 = np.random.random_sample()
-                #%% testing
+
                 vi_sau = w * pop[j][self.ID_VECTOR_V] + self.c1 * r1 * \
                          (pop[j][self.ID_PAST_POSITION_BEST] - pop[j][self.ID_CURRENT_POSITION]) \
-                         + self.c2 * r2 * (gbest[self.ID_CURRENT_POSITION] - pop[j][self.ID_CURRENT_POSITION])
+                         + self.c2 * r2 * (g_best[self.ID_CURRENT_POSITION] - pop[j][self.ID_CURRENT_POSITION])
 
-                #%% testing 2
-                xi_sau = pop[j][self.ID_CURRENT_POSITION] + vi_sau                 # Xi(sau) = Xi(truoc) + Vi(sau) * deltaT (deltaT = 1)
+                xi_sau = pop[j][self.ID_CURRENT_POSITION] + vi_sau
                 fit_sau = self._fitness_model__(solution=xi_sau, minmax=0)
                 fit_truoc = pop[j][self.ID_PAST_FITNESS]
 
-                # Cap nhat x hien tai, v hien tai, so sanh va cap nhat x past best voi x hien tai
                 pop[j][self.ID_CURRENT_POSITION] = deepcopy(xi_sau)
                 pop[j][self.ID_VECTOR_V] = deepcopy(vi_sau)
                 pop[j][self.ID_CURRENT_FITNESS] = fit_sau
@@ -64,14 +58,12 @@ class BasePSO(RootAlgo):
                     pop[j][self.ID_PAST_POSITION_BEST] = deepcopy(xi_sau)
                     pop[j][self.ID_PAST_FITNESS] = fit_sau
 
-            current_best = self._get_global_best__(pop=pop, id_fitness=self.ID_CURRENT_FITNESS, id_best=self.ID_MIN_PROBLEM)
-            if current_best[self.ID_CURRENT_FITNESS] < gbest[self.ID_CURRENT_FITNESS]:
-                gbest = deepcopy(current_best)
-            self.loss_train.append(gbest[self.ID_CURRENT_FITNESS])
+            g_best = self._update_global_best__(pop, self.ID_MIN_PROBLEM, g_best)
+            self.loss_train.append(g_best[self.ID_CURRENT_FITNESS])
             if self.print_train:
-                print("Generation : {0}, best result so far: {1}".format(i+1, gbest[self.ID_CURRENT_FITNESS]))
+                print("Epoch: {}, best result so far: {}".format(i+1, g_best[self.ID_CURRENT_FITNESS]))
 
-        return gbest[self.ID_CURRENT_POSITION], self.loss_train, gbest[self.ID_CURRENT_FITNESS]
+        return g_best[self.ID_CURRENT_POSITION], self.loss_train, g_best[self.ID_CURRENT_FITNESS]
 
 
 
