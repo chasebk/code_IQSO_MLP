@@ -41,3 +41,7 @@ algorithms. So better to have an abstract layer for all algorithms.
 * The pre-version of our paper and code can be found at: https://github.com/chasebk/
 
 * Don't hesitate if you have any question about our code and paper via nguyenthieu2102@gmail.com or hoangnghiabao96@gmail.com 
+
+## License
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
