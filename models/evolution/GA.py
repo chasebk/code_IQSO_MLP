@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# ------------------------------------------------------------------------------------------------------%
+# Created by "Thieu Nguyen" at 22:42, 15/08/2019                                                        %
+#                                                                                                       %
+#       Email:      nguyenthieu2102@gmail.com                                                           %
+#       Homepage:   https://www.researchgate.net/profile/Thieu_Nguyen6                                  %
+#       Github:     https://github.com/thieunguyen5991                                                  %
+#-------------------------------------------------------------------------------------------------------%
+
 import numpy as np
 from copy import deepcopy
 from models.root_algo import RootAlgo

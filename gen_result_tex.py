@@ -1,18 +1,20 @@
-import pickle as pkl
-import numpy as np
-import pandas as pd
-import seaborn as sns
-import os
-import matplotlib.pyplot as plt
-from utils.FunctionUtil import cal_mean, cal_std
-from decimal import Decimal
+#!/usr/bin/env python
+# ------------------------------------------------------------------------------------------------------%
+# Created by "Bao Hoang" at 21:43, 01/02/2020                                                           %
+#                                                                                                       %
+#       Email:      hoangnghiabao96@gmail.com                                                           %
+#       Homepage:   https://www.researchgate.net/profile/Bao_Hoang19                                    %
+#       Github:     https://github.com/hoangbao123                                                      %
+#-------------------------------------------------------------------------------------------------------%
 """
-Generate unimodal, multimodal, hybrid, compostion result table 
-Input: read input from history/overall/algo_dict_info.pkl which is generated after running 
-get_experiment_infor.py
-Output: tex().txt in history/generated_labtex_table/
+    Generate unimodal, multimodal, hybrid, compostion result table
+
+    Input: read input from history/overall/algo_dict_info.pkl which is generated after running  get_experiment_infor.py
+    Output: tex().txt in history/generated_labtex_table/
 """
 
+import pickle as pkl
+from decimal import Decimal
 
 def load_data():
     with open('./history/overall/algo_dict_info.pkl', 'rb') as f:

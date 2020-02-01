@@ -1,4 +1,6 @@
-# How to read our repository
+# Improved Queuing Search Optimization for Global Search
+
+## How to read our repository
 * utils: includes helper functions (objective functions used in meta-heuristic algorithms)
     * We have also built a framework for benchmark functions (such as unimodal, multimodal, composition, ... CEC 2014, ...)
     * Check it out: https://pypi.org/project/opfunu/
@@ -22,13 +24,13 @@ algorithms. So better to have an abstract layer for all algorithms.
     * 1st: run file run_multiple_algo.py (run each algorithm 15 times and save the best fitness of each run times and loss
     of the best among 15 run times into folder: convergence and stability)
     * 2nd: run file get_experiment_infor.py to read saved data from 1st step. Then transform that data into dict type 
-    for making latex table then save it in foler: overall/all_algo_infor.pkl
+    for making latex table then save it in folder: overall/all_algo_infor.pkl
     * 3rd: run file gen_result_tex.py to make latex table from all_algo_infor.pkl file
     * 4th: run file plot_stab_conv.py to draw convergence and stability of 30 functions.
     
     * To change the parameters of models in: run_multiple_algo.py
 
-# Publications
+## Publications
 * If you see our code and data useful and use it, please cites us here
     * Nguyen, T., Nguyen, T., Nguyen, B. M., & Nguyen, G. (2019). Efficient Time-Series Forecasting Using Neural Network and Opposition-Based Coral Reefs Optimization. International Journal of Computational Intelligence Systems, 12(2), 1144-1161.
     

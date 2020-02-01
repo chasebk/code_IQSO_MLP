@@ -1,19 +1,26 @@
+#!/usr/bin/env python
+# ------------------------------------------------------------------------------------------------------%
+# Created by "Bao Hoang" at 21:43, 01/02/2020                                                           %
+#                                                                                                       %
+#       Email:      hoangnghiabao96@gmail.com                                                           %
+#       Homepage:   https://www.researchgate.net/profile/Bao_Hoang19                                    %
+#       Github:     https://github.com/hoangbao123                                                      %
+#-------------------------------------------------------------------------------------------------------%
+"""
+    Get all information (best fit of 15 runtimes and losses for the best run) of all algorithms.
+    Save all information in  overall/algo_dict_info.pkl
+"""
+
 import pickle as pkl
 import numpy as np
-import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 from utils.FunctionUtil import cal_mean, cal_std
 from utils.class_utils import AlgoInfor
-"""
-Get all information (best fit of 15 runtimes and losses for the best run) of all algorithms.
-Save all information in  overall/algo_dict_info.pkl
-"""
 
 algos = ['GA', 'PSO', 'ABFOLS', 'CRO', 'ABC', 'WOA', 'QSO', 'IQSO']
 path_loss = './history/loss/'
 path_best_fit = './history/best_fit/'
 algo_dict = {}
+
 # iterate over all algorithms
 for name in algos:
     al = AlgoInfor()

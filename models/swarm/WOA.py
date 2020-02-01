@@ -1,3 +1,12 @@
+#!/usr/bin/env python
+# ------------------------------------------------------------------------------------------------------%
+# Created by "Bao Hoang" at 14:43, 01/02/2020                                                           %
+#                                                                                                       %
+#       Email:      hoangnghiabao96@gmail.com                                                           %
+#       Homepage:   https://www.researchgate.net/profile/Bao_Hoang19                                    %
+#       Github:     https://github.com/hoangbao123                                                      %
+#-------------------------------------------------------------------------------------------------------%
+
 import numpy as np
 from models.root_algo import RootAlgo
 

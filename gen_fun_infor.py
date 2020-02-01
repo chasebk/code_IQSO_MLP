@@ -1,9 +1,14 @@
-import numpy as np
-
-""""
-Generate latex table of 30 benmark functions
+#!/usr/bin/env python
+# ------------------------------------------------------------------------------------------------------%
+# Created by "Bao Hoang" at 21:43, 01/02/2020                                                           %
+#                                                                                                       %
+#       Email:      hoangnghiabao96@gmail.com                                                           %
+#       Homepage:   https://www.researchgate.net/profile/Bao_Hoang19                                    %
+#       Github:     https://github.com/hoangbao123                                                      %
+# -------------------------------------------------------------------------------------------------------%
 """
-
+    Generate latex table of 30 benmark functions
+"""
 
 list_fun = ['Rotated High Conditioned Elliptic Function',
             'Rotated Bent Cigar Function',

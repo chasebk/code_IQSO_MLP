@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# ------------------------------------------------------------------------------------------------------%
+# Created by "Thieu Nguyen" at 18:42, 18/08/2019                                                        %
+#                                                                                                       %
+#       Email:      nguyenthieu2102@gmail.com                                                           %
+#       Homepage:   https://www.researchgate.net/profile/Thieu_Nguyen6                                  %
+#       Github:     https://github.com/thieunguyen5991                                                  %
+#-------------------------------------------------------------------------------------------------------%
 
 from numpy.random import randint, uniform, choice
 from copy import deepcopy

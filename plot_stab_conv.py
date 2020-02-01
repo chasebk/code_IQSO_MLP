@@ -1,14 +1,21 @@
+#!/usr/bin/env python
+# ------------------------------------------------------------------------------------------------------%
+# Created by "Bao Hoang" at 21:43, 01/02/2020                                                           %
+#                                                                                                       %
+#       Email:      hoangnghiabao96@gmail.com                                                           %
+#       Homepage:   https://www.researchgate.net/profile/Bao_Hoang19                                    %
+#       Github:     https://github.com/hoangbao123                                                      %
+#-------------------------------------------------------------------------------------------------------%
+"""
+    Plot stability and convergence speed of 15 runtimes of all algorithm over 30 benmark functions
+    Then read input form overall/algo_dict_info.pkl which is generated after run get_experiment_infor.py
+"""
+
 import seaborn as sns
 import matplotlib.pyplot as plt
 import pickle as pkl
 import numpy as np
 import pandas as pd
-from utils.class_utils import AlgoInfor
-"""
-plot stability and convergence speed of 15 runtimes of all algorithm over 30 benmark functions
-read input form overall/algo_dict_info.pkl which is generated after run get_experiment_infor.py
-"""
-
 
 def get_loss_fit(fun_index, labels):
     x = np.arange(len(algo_infor['QSO'].loss[1]))
