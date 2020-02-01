@@ -1,4 +1,4 @@
-from models.swarm.WOA import BaoWOA
+from models.swarm.WOA import BaseWOA
 from utils.FunctionUtil import *
 
 ## Setting parameters`
@@ -14,6 +14,6 @@ woa_paras = {
 }
 
 ## Run model
-md = BaoWOA(root_algo_paras=root_paras, woa_paras=woa_paras)
+md = BaseWOA(root_algo_paras=root_paras, woa_paras=woa_paras)
 md._train__()
 
