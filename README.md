@@ -1,5 +1,8 @@
 # Improved Queuing Search Optimization for Global Search
 
+## Full experiment with Benchmark Functions Test
+* In the file: full_experiment.pdf
+
 ## How to read our repository
 * utils: includes helper functions (objective functions used in meta-heuristic algorithms)
     * We have also built a framework for benchmark functions (such as unimodal, multimodal, composition, ... CEC 2014, ...)
